@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LinearRegression
+
+# Create the dataset
+data = {
+    'x': [1, 1, 2, 2, 3, 1, 1, 1, 2, 3],
+    'y': [1, 2, 1, 1, 1, 3, 2, 2, 1, 2]
+}
+df = pd.DataFrame(data)
+
+# Display the first few rows of the dataset
+print(df.head())
+
+# Visualize the data with a regression plot
+sns.regplot(data=df, x='x', y='y')
+plt.title("Regression Plot")
+plt.show()
+
+# Fit a Linear Regression model
+model = LinearRegression()
+model.fit(df[['x']], df['y'])
+
+# Predict the 'y' values based on the model
+df['y_predicted'] = model.predict(df[['x']])
+
+# Display the updated dataframe with predictions
+print(df.head())
+
+# Calculate the Mean Squared Error
+mse = mean_squared_error(df['y'], df['y_predicted'])
+print(f"THE MEAN SQUARED ERROR IS: {mse}")
+
+# Calculate bias and variance
+bias = np.mean(df['y']) - np.mean(df['y_predicted'])
+variance = np.var(df['y_predicted'])
+print(f"Bias: {bias}")
+print(f"Variance: {variance}")
