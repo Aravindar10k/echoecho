@@ -1,0 +1,44 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, accuracy_score
+
+# Load the dataset
+file_path = "C:\\Users\\balaj\\Desktop\\creditcard.csv"  # Ensure the file path is correct
+credit_card_df = pd.read_csv(file_path)
+
+# Check for missing values
+print(credit_card_df.isnull().sum())  # It helps in ensuring there are no missing values
+
+# Separate the features (X) and the target variable (y)
+X = credit_card_df.drop(columns=['Class'])
+y = credit_card_df['Class']
+
+# Standardizing the Time and Amount columns
+scaler = StandardScaler()
+X[['Time', 'Amount']] = scaler.fit_transform(X[['Time', 'Amount']])
+
+# Splitting the dataset into training and testing sets (70% training, 30% testing)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+# Reducing the dataset to 20% of its size for faster processing during initial testing
+X_train_small, _, y_train_small, _ = train_test_split(X_train, y_train, test_size=0.8, random_state=42, stratify=y_train)
+
+# Initialize the linear SVM classifier
+svm_model_linear = SVC(kernel='linear', random_state=42)
+
+# Train the linear SVM model on the smaller subset
+svm_model_linear.fit(X_train_small, y_train_small)
+
+# Make predictions on the test set
+y_pred_small = svm_model_linear.predict(X_test)
+
+# Evaluate the model performance
+accuracy_small = accuracy_score(y_test, y_pred_small)
+classification_rep_small = classification_report(y_test, y_pred_small)
+
+# Print results
+print(f"Accuracy: {accuracy_small}")
+print("Classification Report:")
+print(classification_rep_small)
