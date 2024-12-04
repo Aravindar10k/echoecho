@@ -1,0 +1,53 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load the dataset
+data = pd.read_csv('data.csv')
+
+# Features and target variable
+X = data[['GRE Score', 'TOEFL Score']]
+y = data['Chance of Admit']
+
+# Convert 'Chance of Admit' to binary for logistic regression (1 if >0.7, else 0)
+y = y.apply(lambda x: 1 if x > 0.7 else 0)
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the Logistic Regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict on the test data
+y_pred = model.predict(X_test)
+
+# Compute accuracy, confusion matrix, and classification report
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+classification_rep = classification_report(y_test, y_pred)
+
+# Output the results
+print(f"Accuracy: {accuracy}")
+print("Confusion Matrix:")
+print(conf_matrix)
+print("Classification Report:")
+print(classification_rep)
+
+# Visualize the decision boundary
+xx, yy = np.meshgrid(np.linspace(X['GRE Score'].min(), X['GRE Score'].max(), num=50),
+                     np.linspace(X['TOEFL Score'].min(), X['TOEFL Score'].max(), num=50))
+
+# Predict for meshgrid points and plot contour
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+plt.contourf(xx, yy, Z, cmap=plt.cm.Paired, alpha=0.8)
+
+# Scatter plot for the data points
+plt.scatter(X['GRE Score'], X['TOEFL Score'], c=y, cmap=plt.cm.Paired, edgecolors='k', marker='o')
+plt.xlabel('GRE Score')
+plt.ylabel('TOEFL Score')
+plt.title('Logistic Regression Decision Boundary')
+plt.show()
