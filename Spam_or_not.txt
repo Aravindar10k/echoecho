@@ -1,0 +1,38 @@
+import pandas as pd   
+import numpy as np   
+import matplotlib.pyplot as plt   
+from sklearn.feature_extraction.text import TfidfVectorizer   
+from sklearn.svm import SVC   
+from sklearn.metrics import accuracy_score   
+
+# Load the dataset for label encoding   
+data = pd.read_csv('spam.csv', encoding='latin1')  # Fix the encoding issue
+data = data[['v1', 'v2']]   
+data.columns = ['Label', 'Text']   
+
+# Encode the labels (ham: 0, spam: 1)   
+data['Label'] = data['Label'].map({'ham': 0, 'spam': 1})   
+
+# Vectorize the text data using TF-IDF   
+tfidf_vectorizer = TfidfVectorizer(max_features=1000, stop_words='english')   
+X_tfidf = tfidf_vectorizer.fit_transform(data['Text'])   
+
+# Initialize and train the SVM classifier   
+svm_classifier = SVC(kernel='linear', C=1.0)   
+svm_classifier.fit(X_tfidf, data['Label'])   
+
+# Input your sample text   
+sample_text = ["Congratulations, you've won a free gift card! Claim it now!"]   
+
+# Vectorize the sample text using the same TF-IDF vectorizer   
+sample_text_tfidf = tfidf_vectorizer.transform(sample_text)   
+
+# Make predictions on the sample text 
+sample_predictions = svm_classifier.predict(sample_text_tfidf) 
+
+# Decode the predictions (0 for 'ham' and 1 for 'spam') 
+sample_predictions_labels = ['ham' if pred == 0 else 'spam' for pred in sample_predictions] 
+
+# Output the result
+print("Sample Text:", sample_text[0]) 
+print("Predicted Label:", sample_predictions_labels[0]) 
