@@ -1,0 +1,60 @@
+# Importing libraries
+import pandas as pd
+
+# (a) Loading the dataset and printing it
+df = pd.read_csv('dataset.csv')
+print("DATASET:\n", df)
+
+# (b) Printing the head of the dataframe
+print("\nHEAD OF THE DATAFRAME:\n", df.head())
+
+# (c) Printing the shape of the dataframe
+print("\nSHAPE =", df.shape)
+
+# (d) Printing the data types of the columns
+print("\nTYPES =\n", df.dtypes)
+
+# (e) Printing the first three rows of the dataframe
+print("\nFIRST 3 ROWS:\n", df.iloc[:3])
+
+# (f) Number of rows in the dataframe
+rows = len(df)
+print("\nNUMBER OF ROWS =", rows)
+
+# (g) Displaying the features (columns) of the dataframe
+print("\nFEATURES =", df.columns.tolist())
+
+# (h) Checking for missing values
+print("\nMISSING VALUES:\n", df.isnull().sum())
+
+# (i) Information of the dataset
+print("\nDATASET INFORMATION:")
+df.info()
+
+# (j) Quantiles of the dataset
+print("\nQUANTILES:\n", df.quantile([0.25, 0.5, 0.75]))
+
+# (k) Mean of the dataset
+print("\nMEAN OF DATASET:\n", df.mean(numeric_only=True))
+
+# (l) Mode of the dataset
+print("\nMODE OF DATASET:\n", df.mode(numeric_only=True))
+
+# (m) Standard deviation of the dataset
+print("\nSTANDARD DEVIATION:\n", df.std(numeric_only=True))
+
+# (n) Median of the dataset
+print("\nMEDIAN OF DATASET:\n", df.median(numeric_only=True))
+
+# (o) Summary statistics of the dataset
+print("\nDESCRIBE OF DATASET:\n", df.describe())
+
+# (p) Minimum values of the dataset
+print("\nMINIMUM VALUES:\n", df.min(numeric_only=True))
+
+# (q) Maximum values of the dataset
+print("\nMAXIMUM VALUES:\n", df.max(numeric_only=True))
+
+# (r) First four cells using index and column
+ffour = df.iloc[:4, :4]
+print("\nFIRST FOUR CELLS OF THE DATASET:\n", ffour)
