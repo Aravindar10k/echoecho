@@ -1,0 +1,66 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+
+# Sample dataset
+data = {
+    'Exam1': [34, 45, 50, 60, 70, 80, 90, 95, 85, 75],
+    'Exam2': [78, 65, 70, 80, 90, 85, 95, 88, 92, 77],
+    'Admitted': [0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
+}
+
+# Convert to DataFrame
+df = pd.DataFrame(data)
+
+# Features and target variable
+X = df[['Exam1', 'Exam2']]
+y = df['Admitted']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a logistic regression model
+model = LogisticRegression()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
+
+print(f"Accuracy: {accuracy}")
+print("Confusion Matrix:")
+print(conf_matrix)
+print("Classification Report:")
+print(class_report)
+
+# Predict the probability of admission for a new applicant
+new_applicant = np.array([[85, 90]])  # New applicant's Exam1 and Exam2 scores
+admission_probability = model.predict_proba(new_applicant)
+print(f"Probability of admission: {admission_probability[0][1]}")
+
+# Plot decision boundary
+# Create a mesh grid to plot the decision boundary
+x_min, x_max = X['Exam1'].min() - 1, X['Exam1'].max() + 1
+y_min, y_max = X['Exam2'].min() - 1, X['Exam2'].max() + 1
+xx, yy = np.meshgrid(np.linspace(x_min, x_max, 100), np.linspace(y_min, y_max, 100))
+
+# Predict for each point in the mesh grid
+Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
+
+# Plotting the decision boundary
+plt.contourf(xx, yy, Z, alpha=0.75, cmap=plt.cm.Paired)
+plt.scatter(X['Exam1'], X['Exam2'], c=y, edgecolors='k', marker='o', cmap=plt.cm.Paired)
+plt.title("Logistic Regression Decision Boundary")
+plt.xlabel("Exam 1 Score")
+plt.ylabel("Exam 2 Score")
+plt.show()
