@@ -1,0 +1,53 @@
+#Program: Simple Linear Regression to Minimize Cost Function
+
+# Importing libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+# Load and Explore the Data
+data = pd.read_csv('/content/50_Startups.csv')
+
+# Display the first few rows of the dataset
+print("First few rows of the dataset:\n", data.head())
+
+# Prepare the Data
+X = data[['R&D Spend']].values  # Feature (Independent Variable)
+y = data['Profit'].values       # Target (Dependent Variable)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Implement Linear Regression
+model = LinearRegression()
+
+# Train the model on the training data
+model.fit(X_train, y_train)
+
+# Predict on the test data
+y_pred = model.predict(X_test)
+
+# Compute Metrics
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
+print(f"R-squared Score: {r2}")
+
+# Plot the training data
+plt.scatter(X_train, y_train, color='red')
+plt.plot(X_train, model.predict(X_train), color='blue')
+plt.title('R&D Spend vs Profit (Training set)')
+plt.xlabel('R&D Spend')
+plt.ylabel('Profit')
+plt.show()
+
+# Plot the test data
+plt.scatter(X_test, y_test, color='green')
+plt.plot(X_train, model.predict(X_train), color='blue')  # Line based on training set
+plt.title('R&D Spend vs Profit (Test set)')
+plt.xlabel('R&D Spend')
+plt.ylabel('Profit')
+plt.show()
