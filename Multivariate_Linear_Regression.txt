@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset
+data = pd.read_csv('data.csv')
+
+# Features and Target variable
+X = data[['GRE Score', 'CGPA']]
+y = data['Chance of Admit']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict on the test data
+y_pred = model.predict(X_test)
+
+# Compute Mean Squared Error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Model coefficients and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+print("Coefficients:", coefficients)
+print("Intercept:", intercept)
+
+# Create a meshgrid for 3D plot
+xx, yy = np.meshgrid(np.linspace(X['GRE Score'].min(), X['GRE Score'].max(), num=50), 
+                     np.linspace(X['CGPA'].min(), X['CGPA'].max(), num=50))
+
+# Predictions for surface plot
+zz = model.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
+
+# Plotting the 3D surface and scatter plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+ax.scatter(X['GRE Score'], X['CGPA'], y, c='b', marker='o', label='Actual Data')
+ax.plot_surface(xx, yy, zz, color='None', alpha=0.5)
+
+# Labels and title
+ax.set_xlabel('GRE Score')
+ax.set_ylabel('CGPA')
+ax.set_zlabel('Chance of Admit')
+ax.set_title('Multivariate Linear Regression')
+ax.legend()
+
+plt.show()
