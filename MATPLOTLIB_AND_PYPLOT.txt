@@ -1,0 +1,68 @@
+# Importing required libraries
+import pandas as pd
+import seaborn as sns
+from matplotlib import pyplot as plt
+
+# Loading the dataset
+df = pd.read_csv("dataset.csv")
+
+# (a) Box Plot
+print("\nBOX PLOT:")
+df.boxplot()
+plt.title("Box Plot of the Dataset")
+plt.show()
+
+# (b) Joint Plot
+print("\nJOINT PLOT:")
+sns.jointplot(x='CRIM', y='B', data=df)
+plt.title("Joint Plot of CRIM vs B")  # Optional
+plt.show()
+
+# (c) Scatter Plot
+print("\nSCATTER PLOT:")
+df.plot(kind='scatter', x='INDUS', y='CHAS', title="Scatter Plot of INDUS vs CHAS")
+plt.xlabel("INDUS")
+plt.ylabel("CHAS")
+plt.show()
+
+# (d) Pair Plot
+print("\nPAIR PLOT:")
+sns.pairplot(df)
+plt.title("Pair Plot of the Dataset")  # Optional
+plt.show()
+
+# (e) Kernel Density Estimate Plot
+print("\nKERNEL DENSITY ESTIMATE (KDE) PLOT:")
+sns.kdeplot(data=df, x='ZN')
+plt.title("KDE Plot of ZN")
+plt.show()
+
+# (f) Heat Map
+print("\nHEAT MAP:")
+sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f")  # Using correlation matrix
+plt.title("Heat Map of the Dataset Correlation")
+plt.show()
+
+# (g) Histogram
+print("\nHISTOGRAM:")
+df.hist(figsize=(10, 8), bins=20)
+plt.suptitle("Histograms of the Dataset")
+plt.show()
+
+# (h) Line Plot
+print("\nLINE PLOT:")
+df.plot()
+plt.title("Line Plot of the Dataset")
+plt.show()
+
+# (i) Violin Plot
+print("\nVIOLIN PLOT:")
+sns.violinplot(x=df["RAD"])
+plt.title("Violin Plot of RAD")
+plt.show()
+
+# (j) Pie Chart
+print("\nPIE CHART:")
+plt.pie(df["DIS"].head(), labels=df.index[:5], autopct='%1.1f%%')  # Using a small subset for clarity
+plt.title("Pie Chart of DIS (First 5 Rows)")
+plt.show()
